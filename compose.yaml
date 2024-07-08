@@ -1,0 +1,9 @@
+# Compose file used in the dev container
+name: auth-service
+services:
+  user-service:
+    build:
+      context: .
+    image: ghcr.io/thefunny42/auth-service:main
+    ports:
+      - 8000:8000

@@ -1,0 +1,7 @@
+services:
+  auth-service:
+    build:
+      target: dev
+    volumes:
+      - .:/workspaces:cached
+    command: sleep infinity
