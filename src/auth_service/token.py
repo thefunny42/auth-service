@@ -70,5 +70,5 @@ def get_token():
     return token
 
 
-def main():  # cover: no pragma
+def main():  # pragma: no cover
     print(json.dumps(token.jwks(private_keys=True)))
