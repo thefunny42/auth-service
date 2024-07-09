@@ -1,0 +1,11 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "authservice.fullname" . }}
+  labels:
+    {{- include "authservice.labels" . | nindent 4 }}
+spec:
+  minAvailable: 75%
+  selector:
+    matchLabels:
+      {{- include "authservice.selectorLabels" . | nindent 6 }}

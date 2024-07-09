@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "authservice.fullname" . }}
+  labels:
+    {{- include "authservice.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "authservice.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: {{ .Values.service.port | quote }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "authservice.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "authservice.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: AUTH_SERVICE_ISSUER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "authservice.fullname" . }}
+                  key: auth_service_issuer
+            - name: AUTH_SERVICE_SESSION_TTL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "authservice.fullname" . }}
+                  key: auth_service_session_ttl
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: conf
+              readOnly: true
+              mountPath: /app/conf
+      volumes:
+        - name: conf
+          projected:
+            sources:
+            - secret:
+                name: {{ include "authservice.fullname" . }}-key
+                items:
+                - key: auth_service_jwks
+                  path: auth_service_jwks 
+            - secret:
+                name: {{ include "authservice.fullname" . }}
+                items:
+                - key: github_client_id
+                  path: github_client_id
+                - key: github_client_secret
+                  path: github_client_secret
+                - key: google_client_id
+                  path: google_client_id
+                - key: google_client_secret
+                  path: google_client_secret
+                - key: session_secret
+                  path: auth_service_session_secret
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
