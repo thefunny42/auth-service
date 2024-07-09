@@ -4,6 +4,8 @@ FROM python:3.12-alpine AS base
 
 WORKDIR /app
 
+RUN mkdir /app/conf
+
 FROM base AS dev
 
 RUN apk add --no-cache zsh pipx gcc linux-headers musl-dev shadow

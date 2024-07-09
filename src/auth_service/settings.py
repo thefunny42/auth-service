@@ -4,7 +4,9 @@ import pydantic_settings
 
 class Settings(pydantic_settings.BaseSettings):
     model_config = pydantic_settings.SettingsConfigDict(
-        env_file=".env", env_file_encoding="utf-8", secrets_dir="/run/secrets"
+        env_file=(".env", ".env.local"),
+        env_file_encoding="utf-8",
+        secrets_dir="/app/conf",
     )
 
     google_client_id: str | None = pydantic.Field(default=None)

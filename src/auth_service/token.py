@@ -1,3 +1,4 @@
+import argparse
 import json
 import time
 import uuid
@@ -71,4 +72,18 @@ def get_token():
 
 
 def main():  # pragma: no cover
-    print(json.dumps(token.jwks(private_keys=True)))
+    parser = argparse.ArgumentParser(
+        "auth-service-token", description="Generate jwks private keys"
+    )
+    parser.add_argument(
+        "--output", action="store", nargs="?", type=argparse.FileType("w")
+    )
+    parser.add_argument("--reset", action="store_true")
+    args = parser.parse_args()
+    if args.reset:
+        token.reset()
+    jwks = json.dumps(token.jwks(private_keys=True))
+    if args.output is not None:
+        args.output.write(jwks)
+    else:
+        print(jwks)

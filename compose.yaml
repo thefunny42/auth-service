@@ -1,7 +1,7 @@
 # Compose file used in the dev container
 name: auth-service
 services:
-  user-service:
+  auth-service:
     build:
       context: .
     image: ghcr.io/thefunny42/auth-service:main

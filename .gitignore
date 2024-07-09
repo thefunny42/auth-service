@@ -1,5 +1,6 @@
 .pytest_cache/*
 .coverage
+.env.local
 dist/*
 **/charts/*.tgz
 htmlcov/*
