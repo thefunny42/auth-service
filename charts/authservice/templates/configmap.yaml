@@ -4,4 +4,5 @@ metadata:
   name: {{ include "authservice.fullname" . }}
 data:
   auth_service_issuer: {{ .Values.issuer | quote }}
+  auth_service_audience: {{ .Values.audience | quote }}
   auth_service_session_ttl: {{ .Values.sessionTTL | quote }}

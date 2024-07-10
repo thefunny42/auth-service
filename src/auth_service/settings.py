@@ -14,6 +14,7 @@ class Settings(pydantic_settings.BaseSettings):
     github_client_id: str | None = pydantic.Field(default=None)
     github_client_secret: str | None = pydantic.Field(default=None)
     auth_service_issuer: str | None = pydantic.Field(default=None)
+    auth_service_audience: str | None = pydantic.Field(default=None)
     auth_service_jwks: str | None = pydantic.Field(default=None)
     auth_service_log_config: str | None = pydantic.Field(default=None)
     auth_service_session_ttl: int = pydantic.Field(default=15 * 60)

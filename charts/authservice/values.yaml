@@ -2,6 +2,7 @@
 
 replicaCount: 3
 issuer: "service.company.io"
+audience:
 googleClientId:
 googleClientSecret:
 githubClientId:
@@ -47,7 +48,7 @@ securityContext:
   runAsGroup: 1000
 
 service:
-  type: LoadBalancer
+  type: ClusterIP
   port: 8000
 
 resources:

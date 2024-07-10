@@ -13,6 +13,7 @@ class Token:
 
     def __init__(self, settings: Settings):
         self.__issuer = settings.auth_service_issuer
+        self.__audience = settings.auth_service_audience
         self.__ttl = settings.auth_service_session_ttl
         if settings.auth_service_jwks:
             self.load(settings.auth_service_jwks)
@@ -53,7 +54,7 @@ class Token:
             claims={
                 "iss": self.__issuer or "",
                 "sub": sub or "",
-                "aud": aud or "",
+                "aud": aud or self.__audience or "",
                 "roles": list(roles),
                 "iat": now,
                 "nbf": now - 60,

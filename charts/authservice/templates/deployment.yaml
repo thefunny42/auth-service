@@ -46,6 +46,11 @@ spec:
                 configMapKeyRef:
                   name: {{ include "authservice.fullname" . }}
                   key: auth_service_issuer
+            - name: AUTH_SERVICE_AUDIENCE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "authservice.fullname" . }}
+                  key: auth_service_audience
             - name: AUTH_SERVICE_SESSION_TTL
               valueFrom:
                 configMapKeyRef:
@@ -73,7 +78,7 @@ spec:
                 name: {{ include "authservice.fullname" . }}-key
                 items:
                 - key: auth_service_jwks
-                  path: auth_service_jwks 
+                  path: auth_service_jwks
             - secret:
                 name: {{ include "authservice.fullname" . }}
                 items:

@@ -1,36 +1,3 @@
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: {{ include "authservice.fullname" . }}-secret
-  annotations:
-    helm.sh/hook: pre-install
-rules:
-  - apiGroups: [""]
-    resources: ["secrets"]
-    verbs: ["create", "delete"]
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: {{ include "authservice.fullname" . }}-secret
-  annotations:
-    helm.sh/hook: pre-install
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: {{ include "authservice.fullname" . }}-secret
-  annotations:
-    helm.sh/hook: pre-install
-subjects:
-  - kind: ServiceAccount
-    namespace: {{ .Release.Namespace }}
-    name: {{ include "authservice.fullname" . }}-secret
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: {{ include "authservice.fullname" . }}-secret
----
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -38,8 +5,9 @@ metadata:
   labels:
     {{- include "authservice.labels" . | nindent 4 }}
   annotations:
-    "helm.sh/hook": pre-install
-    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    helm.sh/hook: pre-install
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+    helm.sh/hook-weight: "5"
 spec:
   template:
     metadata:
@@ -54,7 +22,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "authservice.fullname" . }}-secret
+      serviceAccountName: {{ include "authservice.fullname" . }}-jwks
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
@@ -101,8 +69,9 @@ metadata:
   labels:
     {{- include "authservice.labels" . | nindent 4 }}
   annotations:
-    "helm.sh/hook": pre-delete
-    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+    helm.sh/hook: pre-delete
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded
+    helm.sh/hook-weight: "5"
 spec:
   template:
     metadata:
@@ -117,7 +86,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "authservice.fullname" . }}-secret
+      serviceAccountName: {{ include "authservice.fullname" . }}-jwks
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
