@@ -16,6 +16,8 @@ spec:
         {{- with .Values.labels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+      annotations:
+        sidecar.istio.io/inject: "false"
     spec:
       restartPolicy: Never
       {{- with .Values.imagePullSecrets }}
@@ -80,6 +82,8 @@ spec:
         {{- with .Values.labels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
+      annotations:
+        sidecar.istio.io/inject: "false"
     spec:
       restartPolicy: Never
       {{- with .Values.imagePullSecrets }}
