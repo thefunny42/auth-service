@@ -14,7 +14,7 @@ def test_metrics(client):
     response = client.get("/metrics/")
     assert response.status_code == 200
     metrics = response.text.splitlines()
-    assert "# TYPE auth_service_authorize_created gauge" in metrics
-    assert "# TYPE auth_service_login_created gauge" in metrics
-    assert "# TYPE auth_service_logout_created gauge" in metrics
-    assert "# TYPE auth_service_user_created gauge" in metrics
+    assert "# TYPE authservice_authorize_created gauge" in metrics
+    assert "# TYPE authservice_login_created gauge" in metrics
+    assert "# TYPE authservice_logout_created gauge" in metrics
+    assert "# TYPE authservice_user_created gauge" in metrics

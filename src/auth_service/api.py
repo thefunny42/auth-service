@@ -19,7 +19,7 @@ def jwks(token: Annotated[Token, Depends(get_token)]):
     )
 
 
-_login = Counter("auth_service_login", "Login")
+_login = Counter("authservice_login", "Login")
 
 
 @router.get("/{method}/login", name="login")
@@ -36,7 +36,7 @@ async def login(
     return await client.authorize_redirect(request, redirect_uri)
 
 
-_authorize = Counter("auth_service_authorize", "Authorize")
+_authorize = Counter("authservice_authorize", "Authorize")
 
 
 @router.get("/{method}/authorize", name="authorize")
@@ -63,7 +63,7 @@ async def authorize(
     return responses.RedirectResponse("/")
 
 
-_logout = Counter("auth_service_logout", "Logout")
+_logout = Counter("authservice_logout", "Logout")
 
 
 @router.get("/logout", name="logout")
@@ -91,7 +91,7 @@ class User(pydantic.BaseModel):
     available_methods: list[OAuthMethod]
 
 
-_user = Counter("auth_service_user", "User")
+_user = Counter("authservice_user", "User")
 
 
 @router.get("/user", name="user")
