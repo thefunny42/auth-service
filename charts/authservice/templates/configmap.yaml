@@ -3,6 +3,6 @@ kind: ConfigMap
 metadata:
   name: {{ include "authservice.fullname" . }}
 data:
-  auth_service_issuer: {{ tpl .Values.issuer . | quote }}
-  auth_service_audience: {{ tpl .Values.audience . | quote }}
+  auth_service_issuer: {{ tpl (required  "An issuer is required" .Values.issuer) . | quote }}
+  auth_service_audience: {{ tpl (default "" .Values.audience) . }}
   auth_service_session_ttl: {{ .Values.sessionTTL | quote }}
