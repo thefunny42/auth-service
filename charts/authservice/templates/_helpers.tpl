@@ -36,7 +36,9 @@ Common labels
 {{- define "authservice.labels" -}}
 helm.sh/chart: {{ include "authservice.chart" . }}
 {{ include "authservice.selectorLabels" . }}
+app: {{ .Release.Name  }}
 {{- if .Chart.AppVersion }}
+version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
