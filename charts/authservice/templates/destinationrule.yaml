@@ -3,6 +3,8 @@ apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
   name: {{ include "authservice.fullname" . }}
+  labels:
+    {{- include "authservice.labels" . | nindent 4 }}
 spec:
   host: {{ include "authservice.fullname" . }}
   trafficPolicy:

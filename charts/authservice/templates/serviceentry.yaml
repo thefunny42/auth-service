@@ -3,6 +3,8 @@ apiVersion: networking.istio.io/v1
 kind: ServiceEntry
 metadata:
   name: {{ include "authservice.fullname" . }}
+  labels:
+    {{- include "authservice.labels" . | nindent 4 }}
 spec:
   hosts:
   {{- toYaml .Values.istio.egressHosts | nindent 2 }}
