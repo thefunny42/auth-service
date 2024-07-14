@@ -1,28 +1,28 @@
 # Auth service
 
 Simple service that allows users to authenticate using OAuth to either Github
-or Google. A session cookie is set under the ``/api/authentication`` path.
+or Google. A session cookie is set under the ``/authentication`` path.
 An authenticated user can retrieve a JWT token and validate it against
 a local JWKS.
 
 The endpoints are:
 
-1. ``/api/authentication/jwks.json``: Return the JWKS that can be used to
-   validate token obtained with the ``/api/authentication/user`` endpoint.
+1. ``/authentication/jwks.json``: Return the JWKS that can be used to
+   validate token obtained with the ``/authentication/userinfo`` endpoint.
 
-2. ``/api/authentication/{github,google}/login``: Initiate the login process.
+2. ``/authentication/{github,google}/login``: Initiate the login process.
 
-3. ``/api/authentication/{github,google}/authorize``: Callback userd during the
+3. ``/authentication/{github,google}/authorize``: Callback userd during the
    login process.
 
-4. ``/api/authentication/logout``: Logout.
+4. ``/authentication/logout``: Logout.
 
-5. ``/api/authentication/user``: Fetch information about the currently logged
+5. ``/authentication/userinfo``: Fetch information about the currently logged
    in user and its token:
 
    ```json
    {
-        "available_methods": ["github"],
+        "available": ["github"],
         "user": {
             "email": "me@example.com",
             "method": "github",
@@ -82,9 +82,9 @@ You can forward the port in a terminal to be able to access the application:
 kubectl port-forward service/your-name-authservice 8000:8000
 ```
 
-After you can open http://localhost:8000/api/authentication/github/login in
+After you can open http://localhost:8000/authentication/github/login in
 your browser to authenticate, and check the result again by opening
-http://localhost:8000/api/authentication/user.
+http://localhost:8000/authentication/userinfo.
 
 Cleanup with:
 

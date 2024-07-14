@@ -10,6 +10,7 @@ from .settings import Settings, get_settings
 
 
 class Token:
+    algorithm = "ES256"
 
     def __init__(self, settings: Settings):
         self.__issuer = settings.auth_service_issuer
@@ -50,7 +51,7 @@ class Token:
     ):
         now = int(time.time())
         token = jwcrypto.jwt.JWT(
-            header={"alg": "ES256", "kid": self.__kid},
+            header={"alg": self.algorithm, "kid": self.__kid},
             claims={
                 "iss": self.__issuer or "",
                 "sub": sub or "",

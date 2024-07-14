@@ -20,7 +20,7 @@ class OAuth(authlib.integrations.starlette_client.OAuth):
                     ".well-known/openid-configuration"
                 ),
                 client_id=settings.google_client_id,
-                client_secret=settings.google_client_secret,
+                client_secret=settings.google_client_secret.get_secret_value(),
                 client_kwargs={"scope": "openid email profile"},
             )
         if settings.github_client_id and settings.github_client_secret:
@@ -31,7 +31,7 @@ class OAuth(authlib.integrations.starlette_client.OAuth):
                 authorize_url="https://github.com/login/oauth/authorize",
                 userinfo_endpoint="user",
                 client_id=settings.github_client_id,
-                client_secret=settings.github_client_secret,
+                client_secret=settings.github_client_secret.get_secret_value(),
                 client_kwargs={"scope": "user:email", "allow_signup": False},
             )
 

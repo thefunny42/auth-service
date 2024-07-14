@@ -1,14 +1,14 @@
 from typing import Annotated
-
 import fastapi
 import pydantic
-from fastapi import Depends, responses, status
+from fastapi import Depends, HTTPException, responses, status
 from prometheus_client import Counter
 
-from .oauth import OAuth, OAuthMethod, get_oauth
-from .token import Token, get_token
+from ..oauth import OAuth, OAuthMethod, get_oauth
+from ..token import Token, get_token
+from ..settings import Settings, get_settings
 
-router = fastapi.APIRouter(prefix="/api/authentication")
+router = fastapi.APIRouter(prefix="/authentication")
 
 
 @router.get("/jwks.json")
@@ -73,10 +73,9 @@ def logout(request: fastapi.Request):
     return responses.RedirectResponse("/")
 
 
-class UserInfo(pydantic.BaseModel):
+class CurrentUser(pydantic.BaseModel):
     email: str
     name: str
-    token: str
     roles: list[str]
     method: OAuthMethod
 
@@ -87,22 +86,49 @@ class Link(pydantic.BaseModel):
 
 
 class User(pydantic.BaseModel):
-    user: UserInfo | None
-    available_methods: list[OAuthMethod]
+    user: CurrentUser | None
+    available: list[OAuthMethod]
 
 
-_user = Counter("authservice_user", "User")
+_user = Counter("authservice_userinfo", "User")
 
 
-@router.get("/user", name="user")
+@router.get("/userinfo", name="userinfo")
 def user(
     request: fastapi.Request,
     oauth: Annotated[OAuth, Depends(get_oauth)],
-    token: Annotated[Token, Depends(get_token)],
 ) -> User:
     info = request.session.get("info")
     if info is not None:
-        roles = ["admin"]
-        info = UserInfo(token=token.create(roles=roles), roles=roles, **info)
+        info = CurrentUser(roles=["admin"], **info)
     _user.inc()
-    return User(user=info, available_methods=oauth.available())
+    return User(user=info, available=oauth.available())
+
+
+class AccessToken(pydantic.BaseModel):
+    access_token: str
+    token_type: str = pydantic.Field(default="Bearer")
+    expire_in: int
+
+
+_token = Counter("authservice_token", "Token")
+
+
+@router.get("/token", name="token")
+def token(
+    request: fastapi.Request,
+    token: Annotated[Token, Depends(get_token)],
+    settings: Annotated[Settings, Depends(get_settings)],
+) -> AccessToken:
+    info = request.session.get("info")
+    if info is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Insufficient credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    _token.inc()
+    return AccessToken(
+        access_token=token.create(roles=["admin"]),
+        expire_in=settings.auth_service_session_ttl,
+    )
