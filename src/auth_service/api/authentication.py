@@ -12,14 +12,6 @@ from ..token import Token, get_token
 router = fastapi.APIRouter(prefix="/authentication")
 
 
-@router.get("/jwks.json")
-def jwks(token: Annotated[Token, Depends(get_token)]):
-    return responses.ORJSONResponse(
-        content=token.jwks(private_keys=False),
-        media_type="application/jwk-set+json",
-    )
-
-
 _login = Counter("authservice_login", "Login")
 
 

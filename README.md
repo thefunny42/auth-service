@@ -1,42 +1,51 @@
 # Auth service
 
 Simple service that allows users to authenticate using OAuth to either Github
-or Google. A session cookie is set under the ``/authentication`` path.
+or Google. A session cookie is set under the `/authentication` path.
 An authenticated user can retrieve a JWT token and validate it against
 a local JWKS.
 
 The endpoints are:
 
-1. ``/authentication/jwks.json``: Return the JWKS that can be used to
-   validate token obtained with the ``/authentication/userinfo`` endpoint.
+1. `/.well-known/jwks.json`: Return the JWKS that can be used to
+   validate token obtained with the `/authentication/token` endpoint.
 
-2. ``/authentication/{github,google}/login``: Initiate the login process.
+2. `/authentication/{github,google}/login`: Initiate the login process.
 
-3. ``/authentication/{github,google}/authorize``: Callback userd during the
+3. `/authentication/{github,google}/authorize`: Callback userd during the
    login process.
 
-4. ``/authentication/logout``: Logout.
+4. `/authentication/logout`: Logout.
 
-5. ``/authentication/userinfo``: Fetch information about the currently logged
+5. `/authentication/token`: Fetch a token:
+
+   ```json
+   {
+     "access_token": "....",
+     "token_type": "Bearer",
+     "expire_in": 42
+   }
+   ```
+
+6. `/authentication/userinfo`: Fetch information about the currently logged
    in user and its token:
 
    ```json
    {
-        "available": ["github"],
-        "user": {
-            "email": "me@example.com",
-            "method": "github",
-            "name": "Me",
-            "token": "xxxx",
-            "roles": ["admin"],
-        },
-    }
-    ```
+     "available": ["github"],
+     "user": {
+       "email": "me@example.com",
+       "method": "github",
+       "name": "Me",
+       "roles": ["admin"]
+     }
+   }
+   ```
 
 ## Deployment
 
 You can deploy the service for local testing on either
-[minikube](https://minikube.sigs.k8s.io/docs/) or  Docker Desktop. This can be
+[minikube](https://minikube.sigs.k8s.io/docs/) or Docker Desktop. This can be
 done with the help of an [Helm](https://helm.sh/) chart.
 
 If you use minikube, first start it:
@@ -53,7 +62,7 @@ helm repo add thefunny42 https://thefunny42.github.io/charts
 helm install your-name thefunny42/authservice
 ```
 
-You can create a ``secrets.yaml`` file with your client id and secret for Github
+You can create a `secrets.yaml` file with your client id and secret for Github
 and/or Google:
 
 ```yaml
@@ -102,7 +111,6 @@ minikube stop
 
 The following configuration variables are available:
 
-
 - `GOOGLE_CLIENT_ID`: Client id used to authenticate with Github
 - `GOOGLE_CLIENT_SECRET`: Client secret used to authenticae with Github.
 - `GITHUB_CLIENT_ID`: Client id used to authenticate with Google.
@@ -113,7 +121,6 @@ The following configuration variables are available:
 - `AUTH_SERVICE_LOG_CONFIG`: Custom logging configuration (a default one is provided).
 - `AUTH_SERVICE_SESSION_TTL`: TTL for session cookie and JWT token.
 - `aUTH_SERVICE_SESSION_SECRET`: Shared secret for session cookie.
-
 
 ## Development
 

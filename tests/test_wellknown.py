@@ -14,7 +14,7 @@ def test_openid_configuration(client):
     assert response.status_code == 200
     assert response.json() == {
         "issuer": "http://example.com",
-        "jwks_uri": "http://testserver/authentication/jwks.json",
+        "jwks_uri": "http://testserver/.well-known/jwks.json",
         "userinfo_endpoint": "http://testserver/authentication/userinfo",
         "token_endpoint": "http://testserver/authentication/token",
         "grant_types_supported": ["authorization_code"],
