@@ -82,3 +82,13 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+istio:
+  egressGateway: "{{ .Release.Name }}-egress-gateway"
+  egressHosts:
+    - api.github.com
+    - github.com
+    - accounts.google.com
+    - oauth2.googleapis.com
+    - www.googleapis.com
+    - openidconnect.googleapis.com

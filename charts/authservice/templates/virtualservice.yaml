@@ -1,0 +1,19 @@
+
+{{- if .Capabilities.APIVersions.Has "networking.istio.io/v1alpha3" }}
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ include "authservice.fullname" . }}
+spec:
+  hosts:
+  {{- toYaml .Values.istio.egressHosts | nindent 2 }}
+  gateways:
+  - {{ tpl .Values.istio.egressGateway . }}
+  http:
+  - name: "authservice"
+    match:
+    - port: 443
+    route:
+    - destination:
+        host: {{ tpl .Values.istio.egressGateway . }}
+{{- end }}

@@ -1,0 +1,20 @@
+{{- if .Capabilities.APIVersions.Has "networking.istio.io/v1alpha3" }}
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ tpl .Values.istio.egressGateway . }}
+spec:
+  selector:
+    istio: egressgateway
+  servers:
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    hosts:
+    {{- toYaml .Values.istio.egressHosts | nindent 4 }}
+    tls:
+      mode: SIMPLE
+      serverCertificate: /etc/certs/servercert.pem
+      privateKey: /etc/certs/privatekey.pem
+{{- end }}

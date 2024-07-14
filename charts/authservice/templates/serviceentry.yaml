@@ -1,0 +1,17 @@
+{{- if .Capabilities.APIVersions.Has "networking.istio.io/v1alpha3" }}
+apiVersion: networking.istio.io/v1
+kind: ServiceEntry
+metadata:
+  name: {{ include "authservice.fullname" . }}
+spec:
+  hosts:
+  {{- toYaml .Values.istio.egressHosts | nindent 2 }}
+  exportTo:
+  - "."
+  location: MESH_EXTERNAL
+  ports:
+  - number: 443
+    name: https
+    protocol: TLS
+  resolution: DNS
+{{- end }}
