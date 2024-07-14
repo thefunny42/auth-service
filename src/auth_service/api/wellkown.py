@@ -1,11 +1,12 @@
+from typing import Annotated
+
 import fastapi
 import pydantic
 import pydantic_core
 from fastapi import Depends, responses
-from typing import Annotated
 
-from ..token import Token, get_token
 from ..settings import Settings, get_settings
+from ..token import Token, get_token
 
 router = fastapi.APIRouter(prefix="/.well-known")
 

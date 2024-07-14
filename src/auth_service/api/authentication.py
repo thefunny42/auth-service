@@ -1,12 +1,13 @@
 from typing import Annotated
+
 import fastapi
 import pydantic
 from fastapi import Depends, HTTPException, responses, status
 from prometheus_client import Counter
 
 from ..oauth import OAuth, OAuthMethod, get_oauth
-from ..token import Token, get_token
 from ..settings import Settings, get_settings
+from ..token import Token, get_token
 
 router = fastapi.APIRouter(prefix="/authentication")
 
