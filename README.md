@@ -59,7 +59,7 @@ Install the chart:
 
 ```shell
 helm repo add thefunny42 https://thefunny42.github.io/charts
-helm install your-name thefunny42/authservice
+helm install dev thefunny42/authservice
 ```
 
 You can create a `secrets.yaml` file with your client id and secret for Github
@@ -75,20 +75,20 @@ googleClientSecret: xxx
 Alternatively you can install it from a clone from this repository:
 
 ```shell
-helm install your-name charts/authservice --values secrets.yaml
+helm install dev charts/authservice --values secrets.yaml
 ```
 
 You can verify that everything is running:
 
 ```shell
-helm test your-name
-kubectl get all -l app.kubernetes.io/instance=your-name
+helm test dev
+kubectl get all -l app.kubernetes.io/instance=dev
 ```
 
 You can forward the port in a terminal to be able to access the application:
 
 ```shell
-kubectl port-forward service/your-name-authservice 8000:8000
+kubectl port-forward service/dev-authservice 8000:8000
 ```
 
 After you can open http://localhost:8000/authentication/github/login in
@@ -98,7 +98,7 @@ http://localhost:8000/authentication/userinfo.
 Cleanup with:
 
 ```shell
-helm uninstall your-name
+helm uninstall dev
 ```
 
 If you use minikube:
