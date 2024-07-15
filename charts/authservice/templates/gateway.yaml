@@ -3,6 +3,8 @@ apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
   name: {{ tpl .Values.istio.egressGateway . }}
+  labels:
+    {{- include "authservice.labels" . | nindent 4 }}
 spec:
   selector:
     istio: egressgateway
@@ -14,7 +16,5 @@ spec:
     hosts:
     {{- toYaml .Values.istio.egressHosts | nindent 4 }}
     tls:
-      mode: SIMPLE
-      serverCertificate: /etc/certs/servercert.pem
-      privateKey: /etc/certs/privatekey.pem
+      mode: PASSTHROUGH
 {{- end }}

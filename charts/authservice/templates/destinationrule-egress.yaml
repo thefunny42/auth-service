@@ -2,12 +2,11 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: {{ include "authservice.fullname" . }}
+  name: {{ include "authservice.fullname" . }}-egress
   labels:
     {{- include "authservice.labels" . | nindent 4 }}
 spec:
-  host: {{ include "authservice.fullname" . }}
-  trafficPolicy:
-    loadBalancer:
-      simple: LEAST_REQUEST
+  host: istio-egressgateway.istio-system.svc.cluster.local
+  subsets:
+  - name: {{ include "authservice.fullname" . }}
 {{- end }}

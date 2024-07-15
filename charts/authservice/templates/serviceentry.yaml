@@ -8,12 +8,10 @@ metadata:
 spec:
   hosts:
   {{- toYaml .Values.istio.egressHosts | nindent 2 }}
-  exportTo:
-  - "."
   location: MESH_EXTERNAL
   ports:
   - number: 443
     name: https
-    protocol: TLS
+    protocol: HTTPS
   resolution: DNS
 {{- end }}

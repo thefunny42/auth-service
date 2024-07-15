@@ -1,0 +1,13 @@
+{{- if .Capabilities.APIVersions.Has "networking.istio.io/v1alpha3" }}
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: {{ include "authservice.fullname" . }}-ingress
+  labels:
+    {{- include "authservice.labels" . | nindent 4 }}
+spec:
+  host: {{ include "authservice.fullname" . }}
+  trafficPolicy:
+    loadBalancer:
+      simple: LEAST_REQUEST
+{{- end }}

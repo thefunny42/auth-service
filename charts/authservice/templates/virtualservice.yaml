@@ -1,21 +1,43 @@
 
 {{- if .Capabilities.APIVersions.Has "networking.istio.io/v1alpha3" }}
+{{- $gateway := tpl .Values.istio.egressGateway . }}
+{{- $name :=  include "authservice.fullname" . }}
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
-  name: {{ include "authservice.fullname" . }}
+  name: {{ $name }}
   labels:
     {{- include "authservice.labels" . | nindent 4 }}
 spec:
   hosts:
   {{- toYaml .Values.istio.egressHosts | nindent 2 }}
   gateways:
-  - {{ tpl .Values.istio.egressGateway . }}
-  http:
-  - name: "authservice"
-    match:
-    - port: 443
+  - mesh
+  - {{ $gateway }}
+  tls:
+  {{- range $index, $host := .Values.istio.egressHosts }}
+  - match:
+    - sniHosts:
+      - {{ $host }}
+      gateways:
+      - mesh
     route:
     - destination:
         host: istio-egressgateway.istio-system.svc.cluster.local
+        subset: {{ $name }}
+        port:
+          number: 443
+      weight: 100
+  - match:
+    - sniHosts:
+      - {{ $host }}
+      gateways:
+      - {{ $gateway }}
+    route:
+    - destination:
+        host: {{ $host}}
+        port:
+          number: 443
+      weight: 100
+  {{- end }}
 {{- end }}
