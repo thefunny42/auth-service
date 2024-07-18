@@ -2,16 +2,28 @@
 name = "auth_service"
 description = "Simple auth service"
 readme = "README.md"
-dynamic = ["version", "dependencies"]
+dynamic = ["version"]
 authors = [{ name = 'Sylvain Viollon', email = 'thefunny@gmail.com' }]
 requires-python = '>=3.12'
+dependencies = [
+    'jwcrypto',
+    'authlib',
+    'fastapi',
+    'starlette',
+    'orjson',
+    'itsdangerous',
+    'whtft.app @ git+https://github.com/thefunny42/whtft.app@main',
+    'whtft.metrics @ git+https://github.com/thefunny42/whtft.metrics@main',
+    'pydantic',
+    'pydantic_core',
+]
 
 [project.scripts]
 auth-service = "auth_service.main:main"
 auth-service-token = "auth_service.token:main"
 
 [build-system]
-requires = ["hatchling", "hatch-requirements-txt"]
+requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.black]
@@ -25,9 +37,6 @@ path = "src/auth_service/main.py"
 
 [tool.hatch.metadata]
 allow-direct-references = true
-
-[tool.hatch.metadata.hooks.requirements_txt]
-files = ["requirements.txt"]
 
 [tool.hatch.envs.hatch-static-analysis]
 dependencies = ["black", "flake8", "isort"]
@@ -43,4 +52,4 @@ lint-fix = "lint-check"
 
 [tool.hatch.envs.hatch-test]
 randomize = true
-extra-dependencies = ["pytest-asyncio==0.23.7", "respx==0.21.1"]
+extra-dependencies = ["auth_service", "pytest-asyncio==0.23.7", "respx==0.21.1"]
