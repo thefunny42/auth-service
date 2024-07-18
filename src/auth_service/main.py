@@ -1,9 +1,8 @@
 import fastapi
-import prometheus_client
-import uvicorn
+import whtft.app
 from starlette.middleware.sessions import SessionMiddleware
 
-from .api import authentication, wellkown
+from .api import authentication, wellkown, metrics
 from .settings import get_settings
 
 __version__ = "0.1.0"
@@ -19,7 +18,7 @@ app.add_middleware(
     path="/authentication",
 )
 
-app.mount("/metrics", prometheus_client.make_asgi_app())
+app.mount("/metrics", metrics.metrics.app)
 
 
 @app.get("/health")
@@ -32,13 +31,4 @@ app.include_router(wellkown.router)
 
 
 def main():  # pragma: no cover
-    log_config = None
-    if settings.auth_service_log_config is not None:
-        log_config = str(settings.auth_service_log_config)
-    uvicorn.run(
-        app,
-        host="0.0.0.0",
-        port=8000,
-        server_header=False,
-        log_config=log_config,
-    )
+    return whtft.app.main(app, settings)

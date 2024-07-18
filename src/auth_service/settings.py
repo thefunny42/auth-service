@@ -1,13 +1,8 @@
 import pydantic
-import pydantic_settings
+import whtft.app
 
 
-class Settings(pydantic_settings.BaseSettings):
-    model_config = pydantic_settings.SettingsConfigDict(
-        env_file=(".env", ".env.local"),
-        env_file_encoding="utf-8",
-        secrets_dir="/app/conf",
-    )
+class Settings(whtft.app.Settings):
 
     google_client_id: str | None = pydantic.Field(default=None)
     google_client_secret: pydantic.SecretStr | None = pydantic.Field(
@@ -20,29 +15,10 @@ class Settings(pydantic_settings.BaseSettings):
     auth_service_issuer: str = pydantic.Field(default=...)
     auth_service_audience: str | None = pydantic.Field(default=None)
     auth_service_jwks: str | None = pydantic.Field(default=None)
-    auth_service_log_config: pydantic.FilePath | None = pydantic.Field(
-        default=None
-    )
     auth_service_session_ttl: int = pydantic.Field(default=15 * 60)
     auth_service_session_secret: pydantic.SecretStr = pydantic.Field(
         default=...
     )
-
-    @classmethod
-    def settings_customise_sources(
-        cls,
-        settings_cls: type[pydantic_settings.BaseSettings],
-        init_settings: pydantic_settings.PydanticBaseSettingsSource,
-        env_settings: pydantic_settings.PydanticBaseSettingsSource,
-        dotenv_settings: pydantic_settings.PydanticBaseSettingsSource,
-        file_secret_settings: pydantic_settings.PydanticBaseSettingsSource,
-    ) -> tuple[pydantic_settings.PydanticBaseSettingsSource, ...]:
-        return (
-            init_settings,
-            file_secret_settings,
-            env_settings,
-            dotenv_settings,
-        )
 
 
 settings = Settings()

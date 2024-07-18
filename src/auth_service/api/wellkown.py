@@ -7,6 +7,7 @@ from fastapi import Depends, responses
 
 from ..settings import Settings, get_settings
 from ..token import Token, get_token
+from .metrics import metrics
 
 router = fastapi.APIRouter(prefix="/.well-known")
 
@@ -29,6 +30,7 @@ def global_url(request: fastapi.Request, name: str):
 
 
 @router.get("/openid-configuration")
+@metrics.measure()
 def configuration(
     settings: Annotated[Settings, Depends(get_settings)],
     request: fastapi.Request,
@@ -44,6 +46,7 @@ def configuration(
 
 
 @router.get("/jwks.json", name="jwks")
+@metrics.measure()
 def jwks(token: Annotated[Token, Depends(get_token)]):
     return responses.ORJSONResponse(
         content=token.jwks(private_keys=False),

@@ -27,9 +27,6 @@ RUN --mount=type=bind,source=.,target=src,rw  \
 
 RUN addgroup --system --gid 1000 python
 RUN adduser --system --uid 1000 -G python -H python
-COPY logging.yaml .
-
-ENV AUTH_SERVICE_LOG_CONFIG="logging.yaml"
 
 USER 1000:1000
 

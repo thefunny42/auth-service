@@ -17,5 +17,7 @@ def test_metrics(client):
     assert "# TYPE authservice_authorize_created gauge" in metrics
     assert "# TYPE authservice_login_created gauge" in metrics
     assert "# TYPE authservice_logout_created gauge" in metrics
-    assert "# TYPE authservice_userinfo_created gauge" in metrics
+    assert "# TYPE authservice_user_created gauge" in metrics
     assert "# TYPE authservice_token_created gauge" in metrics
+    assert "# TYPE authservice_configuration_created gauge" in metrics
+    assert "# TYPE authservice_jwks_created gauge" in metrics
