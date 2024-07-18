@@ -2,7 +2,7 @@ import fastapi
 import whtft.app
 from starlette.middleware.sessions import SessionMiddleware
 
-from .api import authentication, wellkown, metrics
+from .api import authentication, metrics, wellkown
 from .settings import get_settings
 
 __version__ = "0.1.0"

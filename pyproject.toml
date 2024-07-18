@@ -10,7 +10,6 @@ dependencies = [
     'authlib',
     'fastapi',
     'starlette',
-    'orjson',
     'itsdangerous',
     'whtft.app @ git+https://github.com/thefunny42/whtft.app@main',
     'whtft.metrics @ git+https://github.com/thefunny42/whtft.metrics@main',
