@@ -118,9 +118,9 @@ The following configuration variables are available:
 - `AUTH_SERVICE_ISSUER`: Issuer for for JWT token.
 - `AUTH_SERVICE_AUDIENCE`: Optional audience for JWT token.
 - `AUTH_SERVICE_JWKS`: Optional keys to use to create JWT token.
-- `AUTH_SERVICE_LOG_CONFIG`: Custom logging configuration (a default one is provided).
 - `AUTH_SERVICE_SESSION_TTL`: TTL for session cookie and JWT token.
 - `aUTH_SERVICE_SESSION_SECRET`: Shared secret for session cookie.
+- `DEFAULT_LOG_CONFIG`: Custom logging configuration (a default one is provided).
 
 ## Development
 
